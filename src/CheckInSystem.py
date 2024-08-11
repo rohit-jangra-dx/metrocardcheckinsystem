@@ -1,3 +1,4 @@
+from .appconfig import PassengerType, StationType
 from pydantic import BaseModel
 from typing import TypedDict, Literal, Dict
 from src.MetroCard import MetroCard
@@ -6,8 +7,8 @@ from src.MetroCard import MetroCard
 class CardInfoMap(TypedDict):
     card_id: str
     card_balance: int
-    passenger_type: Literal['ADULT','KID', 'SENIOR_CITIZEN',None]
-    travel_record: list[Literal['AIRPORT','CENTERAL']]
+    passenger_type: PassengerType | None
+    travel_record: list[StationType]
 
 CardInfoMapDict = Dict[str, CardInfoMap]
 

@@ -1,25 +1,20 @@
-from enum import Enum
+from .appconfig import FareRate, PassengerType, StationType
 from pydantic import BaseModel
 from typing import Literal, Tuple
 
-class FareRate(Enum):
-    ADULT = 200
-    SENIOR_CITIZEN =  100
-    KID = 50
 
-FareRate
 
 class MetroCard(BaseModel):
     card_id: str
     card_balance: int
-    passenger_type: Literal['ADULT','SENIOR_CITIZEN','KID']
+    passenger_type: PassengerType
     travel_count: int
     
     @property
     def one_way_fare(self) -> int:
         return FareRate[self.passenger_type].value
     
-    def check_in(self, travel_to: Literal['AIRPORT','CENTRAL']) -> Tuple[int, int]:
+    def check_in(self, travel_to: StationType) -> Tuple[int, int]:
         
         # amount that is cut for the travel/ including the service fee
         amount_to_deduct = self.one_way_fare
@@ -42,7 +37,7 @@ class MetroCard(BaseModel):
             self.card_balance += abs(balance_after_deduction) 
             total_amount_of_transcation += 2 *(abs(balance_after_deduction) / 100)
 
-        self.card_balance -= abs(balance_after_deduction)
+        self.card_balance -= abs(amount_to_deduct)
 
 
         return int(total_amount_of_transcation), int(discount_given)
